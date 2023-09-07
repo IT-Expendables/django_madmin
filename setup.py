@@ -13,7 +13,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/IT-Expendables/django_madmin",
-    packages=setuptools.find_packages('django_madmin'),
+    packages=setuptools.find_packages('./django_madmin'),
     include_package_data=True,
     install_requires=['django>=4.0.0,<5.0.0'],
     classifiers=[
