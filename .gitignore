@@ -1,0 +1,14 @@
+### Django ###
+.DS_Store
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+.venv/
+.idea/
+/logs/
+*.sqlite
+*.sqlite3
+/dist/
+/*.egg-info/
