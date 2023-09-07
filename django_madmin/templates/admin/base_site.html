@@ -29,7 +29,9 @@
 </script>
 <style>
 *, ::before, ::after { border-width: 0; border-style: solid; border-color: #eee; }
+{% if not request.resolver_match.url_name == "login" %}
 #container {display: none; min-width: unset;}
+{% endif %}
 </style>
 {% endblock %}
 
