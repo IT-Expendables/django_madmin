@@ -7,7 +7,7 @@
 </div>
 {% else %}
 <h3 class="!p-0 !m-0 !mr-2">{{ title }}</h3>
-<div class="m-filter-btn px-3 h-[28px] min-w-[52px] rounded border border-[rgb(204,204,204)] bg-white cursor-pointer flex items-center gap-x-1 text-[#666]">
+<div class="m-filter-btn px-3 h-[28px] min-w-[52px] rounded border border-[--border-color] cursor-pointer flex items-center gap-x-1 text-[--body-quiet-color]">
     {% for choice in choices %}
         <div class="m-option grow text-center" {% if not choice.selected %}style="display:none;" data-uncheck="1" {% endif %} value="{{ choice.query_string|iriencode }}">
             {{ choice.display }}

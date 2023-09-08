@@ -21,12 +21,8 @@
 <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.min.js' %}"></script>
 {% endif %}
 <script type="text/javascript" src="{% static 'admin/js/jquery.init.js' %}"></script>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-  tailwind.config = {
-    corePlugins: { preflight: false },
-  }
-</script>
+<script src="{% static 'admin/js/tailwindcss.min.js' %}"></script>
+<script>tailwind.config = { corePlugins: { preflight: false } }</script>
 <style>
 *, ::before, ::after { border-width: 0; border-style: solid; border-color: #eee; }
 {% if not request.resolver_match.url_name == "login" %}
@@ -49,7 +45,7 @@
     </div>
     <div class="flex flex-col h-[calc(100vh-48px)] overflow-y-scroll">
     {% for app in available_apps %}
-      <div class="py-4 px-2 bg-[#333E] mb-1">{{ app.name }}</div>
+      <div class="py-3 px-2 bg-[#444E] mb-1">{{ app.name }}</div>
       {% for model in app.models %}
       <div class="px-1 mb-1 flex flex-col">
         <a href="{{ model.admin_url }}" class="app-model !text-white rounded px-2 py-2.5 hover:bg-[rgb(115,169,196)] 
