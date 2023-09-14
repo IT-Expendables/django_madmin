@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html_join
 from .models import Article
-from django_madmin.widgets import AsyncVideoUpload
+from django_madmin.widgets import AsyncVideoUpload, AsyncImageUpload, AsyncFileUpload
 
 
 def online(self, request, queryset):
@@ -31,6 +31,8 @@ class ArticleAdmin(admin.ModelAdmin):
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)
         form.base_fields.get('title').widget = AsyncVideoUpload()
+        form.base_fields.get('summary').widget = AsyncImageUpload()
+        form.base_fields.get('author').widget = AsyncFileUpload()
         return form
 
     def _operate(self, obj):

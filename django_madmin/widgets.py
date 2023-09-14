@@ -2,7 +2,6 @@ from django import forms
 from django.templatetags.static import static
 from django.utils.crypto import get_random_string
 from pathlib import Path
-from .urls import reverse_check_upload_url
 
 
 def get_vue_js():
@@ -45,8 +44,7 @@ class VueComponent(forms.Widget):
 class AsyncFileUpload(VueComponent):
 
     def __init__(self, attrs=None, vue_context={}):
-        check_upload_url = reverse_check_upload_url()
-        vue_context = {'check_upload_url': check_upload_url, **vue_context, 'component': 'MFileUpload'}
+        vue_context = {'check_upload_url': '/madmin/check_upload/', **vue_context, 'component': 'MFileUpload'}
         super().__init__(attrs, vue_context)
 
 

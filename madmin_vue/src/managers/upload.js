@@ -1,18 +1,19 @@
-import { ref, computed, onBeforeMount } from 'vue'
+import { ref, computed } from 'vue'
 import { useFileDialog, useObjectUrl } from '@vueuse/core'
 import axios from 'axios'
 import SparkMD5 from 'spark-md5'
 import { message } from 'ant-design-vue'
-import { vueContextRef, contextRef } from '@/managers/context'
 
 const DEBUG = import.meta.env.DEV
 
-export function useUpload() {
+export function useUpload({context}) {
+  const vueContext = (context || {}).vue_context || {}
+
   const host = DEBUG ? 'http://127.0.0.1:8000' : ''
 
-  const checkURLRef = computed(() => vueContextRef.value.check_upload_url || '/madmin/check_upload/')
+  const checkURL = vueContext.check_upload_url || '/madmin/check_upload/'
 
-  const fileInfoRef = ref(null)
+  const fileInfoRef = ref(context.value ? { url: context.value } : null)
 
   const progressRef = ref(0)
 
@@ -54,7 +55,7 @@ export function useUpload() {
   const checkUpload = async (file, hash) => {
     try {
       const name = file.name
-      const response = await axios.post(checkURLRef.value, { hash, name })
+      const response = await axios.post(checkURL, { hash, name })
       const res = response.data
       DEBUG && console.log('check upload success: ', res)
       return res
@@ -117,12 +118,6 @@ export function useUpload() {
     const file = files[0]
     startUpload(file)
     reset()
-  })
-
-  onBeforeMount(() => {
-    if (contextRef.value.value) {
-      fileInfoRef.value = { url: contextRef.value.value }
-    }
   })
 
   return { host, fileInfoRef, open, clear, progressRef, localURLRef }

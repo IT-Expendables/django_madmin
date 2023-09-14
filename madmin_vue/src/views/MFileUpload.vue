@@ -1,26 +1,37 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import { PlusOutlined, FileTwoTone, DeleteOutlined, EyeOutlined, PlayCircleTwoTone } from '@ant-design/icons-vue'
 import { Modal as AModal, Progress as AProgress, Image as AImage } from 'ant-design-vue'
 import { useUpload } from '@/managers/upload'
-import { vueContextRef, contextRef } from '@/managers/context'
 
-const uploadTypeRef = computed(() => vueContextRef.value.upload_type || 'file')
+const DEBUG = import.meta.env.DEV
 
-const { host, fileInfoRef, open, clear, progressRef, localURLRef } = useUpload()
+const props = defineProps({
+  context: { type: Object, default: () => ({}) }
+})
+
+const vueContext = (props.context || {}).vue_context || {}
+
+const uploadType = vueContext.upload_type || 'file'
+
+const { host, fileInfoRef, open, clear, progressRef, localURLRef } = useUpload({ context: props.context })
 
 const preview = ref(false)
 
 const onPreview = async () => {
-  if (uploadTypeRef.value == 'image') return
+  if (uploadType == 'image') return
   const { url } = fileInfoRef.value || {}
   if (!url) return
-  if (uploadTypeRef.value == 'video') {
+  if (uploadType == 'video') {
     preview.value = true
   } else {
     window.open(host + url)
   }
 }
+
+onBeforeMount(() => {
+  DEBUG && console.log(props.context)
+})
 </script>
 
 <template>
@@ -28,7 +39,7 @@ const onPreview = async () => {
     class="w-24 h-24 p-2 rounded border border-gray-300 group"
     :class="!fileInfoRef ? 'border-dashed hover:border-blue-400 transition-all' : ''"
   >
-    <input v-if="contextRef.name" :name="contextRef.name" :value="fileInfoRef && fileInfoRef.url" class="hidden" />
+    <input v-if="context.name" :name="context.name" :value="fileInfoRef && fileInfoRef.url" class="hidden" />
     <div
       v-if="!fileInfoRef"
       class="w-full h-full cursor-pointer flex flex-col items-center justify-center"
@@ -42,7 +53,7 @@ const onPreview = async () => {
       class="w-full h-full flex flex-col items-center justify-center cursor-pointer relative"
       @click="onPreview"
     >
-      <div v-if="uploadTypeRef == 'image'" class="w-full h-full bg-gray-100 flex items-center">
+      <div v-if="uploadType == 'image'" class="w-full h-full bg-gray-100 flex items-center">
         <AImage :width="100" :height="100" :src="host + fileInfoRef.url || localURLRef">
           <template #previewMask>
             <EyeOutlined />
@@ -50,7 +61,7 @@ const onPreview = async () => {
         </AImage>
       </div>
       <template v-else>
-        <PlayCircleTwoTone v-if="uploadTypeRef == 'video'" class="text-[30px]" />
+        <PlayCircleTwoTone v-if="uploadType == 'video'" class="text-[30px]" />
         <FileTwoTone v-else class="text-[30px]" />
         <div class="line-clamp-2 text-xs mt-1 break-all text-center">{{ fileInfoRef.name }}</div>
       </template>

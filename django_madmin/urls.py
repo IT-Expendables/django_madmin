@@ -1,10 +1,5 @@
 from django.urls import path
-from django.urls import reverse
 from . import views
-
-
-def reverse_check_upload_url():
-    return reverse(views.check_upload)
 
 
 madmin_urls = [
