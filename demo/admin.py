@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html_join
 from .models import Article
+from django_madmin.widgets import AsyncVideoUpload
 
 
 def online(self, request, queryset):
@@ -26,6 +27,11 @@ class ArticleAdmin(admin.ModelAdmin):
     online.short_description = "发布"
     offline.short_description = "下线"
     actions = (online, offline)
+
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, change, **kwargs)
+        form.base_fields.get('title').widget = AsyncVideoUpload()
+        return form
 
     def _operate(self, obj):
         datas = []
