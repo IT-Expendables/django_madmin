@@ -20,19 +20,13 @@ VUE_DEV_URL = 'http://127.0.0.1:5199/src/main.js'
 
 class VueComponent(forms.Widget):
     template_name = "madmin/vue_component.html"
-    vue_context = {}
-
-    def __init__(self, attrs=None, vue_context={}):
-        super().__init__(attrs)
-        self.vue_context = vue_context
 
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)
-        widget_context = context.setdefault('widget', {})
-        widget_attrs = widget_context.setdefault('attrs', {})
-        id = widget_attrs.setdefault('id', 'id_{}'.format(get_random_string(8)))
-        self.vue_context['id'] = id
-        widget_context['vue_context'] = self.vue_context
+        widget = context.get('widget')
+        attrs = widget.setdefault('attrs', {})
+        id = attrs.setdefault('id', 'id_{}'.format(get_random_string(8)))
+        widget['id'] = id
         return context
 
     class Media:
@@ -47,20 +41,26 @@ class VueComponent(forms.Widget):
 
 class AsyncFileUpload(VueComponent):
 
-    def __init__(self, attrs=None, vue_context={}):
-        vue_context = {'check_upload_url': '/madmin/check_upload/', **vue_context, 'component': 'MFileUpload'}
-        super().__init__(attrs, vue_context)
+    def get_context(self, name, value, attrs):
+        context = super().get_context(name, value, attrs)
+        context.get('widget').update({
+            'component': 'MFileUpload',
+            'check_upload_url': '/madmin/check_upload/'
+        })
+        return context
 
 
 class AsyncImageUpload(AsyncFileUpload):
 
-    def __init__(self, attrs=None, vue_context={}):
-        vue_context = {'upload_type': 'image', **vue_context}
-        super().__init__(attrs, vue_context)
+    def get_context(self, name, value, attrs):
+        context = super().get_context(name, value, attrs)
+        context.get('widget').update({'upload_type': 'image'})
+        return context
 
 
 class AsyncVideoUpload(AsyncFileUpload):
 
-    def __init__(self, attrs=None, vue_context={}):
-        vue_context = {'upload_type': 'video', **vue_context}
-        super().__init__(attrs, vue_context)
+    def get_context(self, name, value, attrs):
+        context = super().get_context(name, value, attrs)
+        context.get('widget').update({'upload_type': 'video'})
+        return context

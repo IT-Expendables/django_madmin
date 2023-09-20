@@ -6,14 +6,13 @@ import { message } from 'ant-design-vue'
 
 const DEBUG = import.meta.env.DEV
 
-export function useUpload({context}) {
-  const vueContext = (context || {}).vue_context || {}
+export function useUpload({ defaultValue, checkURL }) {
 
   const host = DEBUG ? 'http://127.0.0.1:8000' : ''
 
-  const checkURL = vueContext.check_upload_url || '/madmin/check_upload/'
+  checkURL = checkURL || '/madmin/check_upload/'
 
-  const fileInfoRef = ref(context.value ? { url: context.value } : null)
+  const fileInfoRef = ref(defaultValue ? { url: defaultValue } : null)
 
   const progressRef = ref(0)
 

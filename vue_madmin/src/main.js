@@ -5,20 +5,14 @@ import MFileUpload from '@/views/MFileUpload.vue'
 import 'tailwindcss/base.css'
 import './app.css'
 
-const components = { MFileUpload }
+const components = { MFileUpload, App }
 
-const mount = (component, id, context) => {
+window.vueMount = (context) => {
+  const component = components[context.component]
   const app = createApp(component, { context })
-  app.mount(id)
+  app.mount(`#${context.id}`)
 }
 
-window.vueMount = (id) => {
-  const context = JSON.parse(document.getElementById(`${id}_vue_context`).textContent)
-  const component = components[context.vue_context.component]
-  mount(component, '#' + id, context)
-}
-
-console.log(location)
 if (import.meta.env.DEV && location.port == '5199') {
-  mount(App, '#app')
+  window.vueMount({ component: 'App', id: 'app' })
 }
