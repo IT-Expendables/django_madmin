@@ -1,5 +1,6 @@
 from django import forms
 from django.templatetags.static import static
+from django.conf import settings
 from django.utils.crypto import get_random_string
 from pathlib import Path
 
@@ -13,6 +14,8 @@ def get_vue_js():
 
 
 VUE_JS = get_vue_js()
+
+VUE_DEV_URL = 'http://127.0.0.1:5199/src/main.js'
 
 
 class VueComponent(forms.Widget):
@@ -36,7 +39,8 @@ class VueComponent(forms.Widget):
 
         class MAdminJS:
             def __html__():
-                return '<script type="module" crossorigin src="{}"></script>'.format(static(VUE_JS)) if VUE_JS else ''
+                js = VUE_DEV_URL if settings.DEBUG else static(VUE_JS)
+                return '<script type="module" crossorigin src="{}"></script>'.format(js) if js else ''
 
         js = [MAdminJS]
 

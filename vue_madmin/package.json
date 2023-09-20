@@ -4,10 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vite build && rm -f ../django_madmin/static/madmin/js/index-*.js && cp -rf dist/assets/*.js ../django_madmin/static/madmin/js",
+    "build": "vite build && npm run move_files && npm run update_ver",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "move_files": "rm -f ../django_madmin/static/madmin/js/index-*.js && cp -rf dist/assets/*.js ../django_madmin/static/madmin/js",
+    "update_ver": "sed -i '' -r \"s|__vue_version__(.+)?|__vue_version__ = $(date '+%Y%m%d%H%M%S')|\"  ../django_madmin/__init__.py",
+    "update_ver1": "sed -ir \"s|__vue_version__(.+)?|__vue_version__ = $(date '+%Y%m%d%H%M%S')|\"  ../django_madmin/__init__.py"
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.0",

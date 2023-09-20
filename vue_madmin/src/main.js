@@ -8,7 +8,7 @@ import './app.css'
 const components = { MFileUpload }
 
 const mount = (component, id, context) => {
-  const app = createApp(component, {context})
+  const app = createApp(component, { context })
   app.mount(id)
 }
 
@@ -18,6 +18,7 @@ window.vueMount = (id) => {
   mount(component, '#' + id, context)
 }
 
-if (import.meta.env.DEV) {
+console.log(location)
+if (import.meta.env.DEV && location.port == '5199') {
   mount(App, '#app')
 }
