@@ -28,9 +28,14 @@ def check_login(view_func):
 
 
 def get_file_path(hash, name):
-    ext_parts = name.rsplit('.', 1)
-    ext = ('.' + ext_parts[1]) if len(ext_parts) > 1 else ''
-    file_path = 'madmin/{}{}'.format(hash, ext)
+    prefix = getattr(settings, 'MADMIN', {}).get('upload_path_prefix', 'madmin')
+    keep_file_name = getattr(settings, 'MADMIN', {}).get('upload_keep_file_name', True)
+    if keep_file_name:
+        file_path = '{}/{}/{}'.format(prefix, hash, name)
+    else:
+        ext_parts = name.rsplit('.', 1)
+        ext = ('.' + ext_parts[1]) if len(ext_parts) > 1 else ''
+        file_path = '{}/{}{}'.format(prefix, hash, ext)
     return file_path
 
 
