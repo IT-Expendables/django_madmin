@@ -41,7 +41,7 @@ export function useUpload({ defaultValue, checkURL }) {
           loadNextChunk()
         } else {
           const md5 = spark.end()
-          resolve(md5)
+          resolve(md5.slice(0, 16))
         }
       }
       fileReader.onerror = () => {
