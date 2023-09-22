@@ -12,6 +12,19 @@ class HttpResponseUnAuth(HttpResponse):
     status_code = 401
 
 
+def check_rest_framework_login(request):
+    try:
+        from rest_framework.settings import api_settings
+        for auth_cls in api_settings.DEFAULT_AUTHENTICATION_CLASSES:
+            auth = auth_cls()
+            setattr(request, '_request', request)
+            user = auth.authenticate(request)
+            if user is not None:
+                return user
+    except Exception:
+        pass
+
+
 def check_login(view_func):
 
     @wraps(view_func)
@@ -21,7 +34,8 @@ def check_login(view_func):
             request = args[0] if len(args) else kwargs.get('request')
             user = request.user if request else None
             if not user or not user.is_authenticated:
-                return HttpResponseUnAuth()
+                if not check_rest_framework_login(request):
+                    return HttpResponseUnAuth()
         return view_func(*args, **kwargs)
 
     return wrapper_view
