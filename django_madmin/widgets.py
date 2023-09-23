@@ -33,7 +33,8 @@ class VueComponent(forms.Widget):
 
         class MAdminJS:
             def __html__():
-                js = VUE_DEV_URL if settings.DEBUG else static(VUE_JS)
+                dev = getattr(settings, 'MADMIN', {}).get('dev', False)
+                js = VUE_DEV_URL if dev else static(VUE_JS)
                 return '<script type="module" crossorigin src="{}"></script>'.format(js) if js else ''
 
         js = [MAdminJS]
