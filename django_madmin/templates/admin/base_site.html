@@ -25,6 +25,7 @@
 <script>tailwind.config = { corePlugins: { preflight: false } }</script>
 <style>
 *, ::before, ::after { border-width: 0; border-style: solid; border-color: #eee; }
+.ant-upload-drag { height: unset !important;}
 {% if not request.resolver_match.url_name == "login" %}
 #container {display: none; min-width: unset;}
 {% endif %}

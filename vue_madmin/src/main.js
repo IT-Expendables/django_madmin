@@ -1,11 +1,12 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import MFileUpload from '@/views/MFileUpload.vue'
+import MMultiFileUpload from '@/views/MMultiFileUpload.vue'
 
 import 'tailwindcss/base.css'
 import './app.css'
 
-const components = { MFileUpload, App }
+const components = { MFileUpload, MMultiFileUpload, App }
 
 window.vueMount = (context) => {
   const component = components[context.component]

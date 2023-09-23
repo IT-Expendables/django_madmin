@@ -43,10 +43,11 @@ class VueComponent(forms.Widget):
 class AsyncFileUpload(VueComponent):
 
     def get_context(self, name, value, attrs):
+        prefix = getattr(settings, 'MADMIN', {}).get('upload_path_prefix', 'madmin')
         context = super().get_context(name, value, attrs)
         context.get('widget').update({
             'component': 'MFileUpload',
-            'check_upload_url': '/madmin/check_upload/'
+            'check_upload_url': '/{}/check_upload/'.format(prefix)
         })
         return context
 
@@ -64,4 +65,18 @@ class AsyncVideoUpload(AsyncFileUpload):
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)
         context.get('widget').update({'upload_type': 'video'})
+        return context
+
+
+class AsyncMultiFileUpload(VueComponent):
+
+    def get_context(self, name, value, attrs):
+        prefix = getattr(settings, 'MADMIN', {}).get('upload_path_prefix', 'madmin')
+        attrs = attrs or {}
+        attrs.update({'class': 'sm:!w-[486px] w-full'})
+        context = super().get_context(name, value, attrs)
+        context.get('widget').update({
+            'component': 'MMultiFileUpload',
+            'check_upload_url': '/{}/check_upload/'.format(prefix),
+        })
         return context

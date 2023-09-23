@@ -1,8 +1,8 @@
 import { ref, computed } from 'vue'
 import { useFileDialog, useObjectUrl } from '@vueuse/core'
 import axios from 'axios'
-import SparkMD5 from 'spark-md5'
 import { message } from 'ant-design-vue'
+import { calcFileHash } from '@/utils'
 
 const DEBUG = import.meta.env.DEV
 
@@ -20,36 +20,6 @@ export function useUpload({ defaultValue, checkURL }) {
   const localURLRef = useObjectUrl(fileRef)
 
   const { open, reset, onChange: onFileChange } = useFileDialog()
-
-  const calcMD5 = (file) => {
-    return new Promise((resolve) => {
-      const chunkSize = 8192
-      const fileReader = new FileReader()
-      const spark = new SparkMD5.ArrayBuffer()
-      const chunks = Math.ceil(file.size / chunkSize)
-      let currentChunk = 0
-      const loadNextChunk = () => {
-        const start = currentChunk * chunkSize
-        const end = Math.min(file.size, start + chunkSize)
-        const chunk = file.slice(start, end)
-        fileReader.readAsArrayBuffer(chunk)
-      }
-      fileReader.onload = (event) => {
-        spark.append(event.target.result)
-        currentChunk++
-        if (currentChunk < chunks) {
-          loadNextChunk()
-        } else {
-          const md5 = spark.end()
-          resolve(md5.slice(0, 16))
-        }
-      }
-      fileReader.onerror = () => {
-        resolve()
-      }
-      loadNextChunk()
-    })
-  }
 
   const checkUpload = async (file, hash) => {
     try {
@@ -86,7 +56,7 @@ export function useUpload({ defaultValue, checkURL }) {
 
   const startUpload = async (file) => {
     fileInfoRef.value = { name: file.name, file, status: 'uploading' }
-    const hash = await calcMD5(file)
+    const hash = await calcFileHash(file)
     if (!hash) {
       fileInfoRef.value.status = 'error'
       message.error('上传文件错误')
