@@ -22,7 +22,7 @@ export const calcFileHash = (file) => {
         loadNextChunk()
       } else {
         const md5 = spark.end()
-        resolve(md5.slice(0, 16))
+        resolve(md5.slice(0, 8))
       }
     }
     fileReader.onerror = () => {

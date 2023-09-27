@@ -45,7 +45,7 @@ def get_file_path(hash, name):
     prefix = getattr(settings, 'MADMIN', {}).get('upload_path_prefix', 'madmin')
     keep_file_name = getattr(settings, 'MADMIN', {}).get('upload_keep_file_name', True)
     if keep_file_name:
-        file_path = '{}/{}/{}'.format(prefix, hash, name)
+        file_path = '{}/{}_{}'.format(prefix, hash, name)
     else:
         ext_parts = name.rsplit('.', 1)
         ext = ('.' + ext_parts[1]) if len(ext_parts) > 1 else ''
