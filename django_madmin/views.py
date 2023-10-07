@@ -41,11 +41,13 @@ def check_login(view_func):
     return wrapper_view
 
 
-def get_file_path(hash, name):
+def get_file_path(hash, name, dir=None):
     prefix = getattr(settings, 'MADMIN', {}).get('upload_path_prefix', 'madmin')
     keep_file_name = getattr(settings, 'MADMIN', {}).get('upload_keep_file_name', True)
+    if dir is not None and dir != '':
+        prefix = '{}/{}'.format(prefix, dir)
     if keep_file_name:
-        file_path = '{}/{}_{}'.format(prefix, hash, name)
+        file_path = '{}/{}/{}'.format(prefix, hash, name)
     else:
         ext_parts = name.rsplit('.', 1)
         ext = ('.' + ext_parts[1]) if len(ext_parts) > 1 else ''
@@ -68,13 +70,14 @@ def get_request_data(request: HttpRequest):
 def upload(request: HttpRequest):
     data = get_request_data(request)
     hash = data.get('hash')
+    dir = data.get('dir')
     file = request.FILES.get('file')
     if not bool(hash):
         return HttpResponseBadRequest('缺少输入参数hash')
     if not bool(file):
         return HttpResponseBadRequest('缺少输入参数file')
 
-    file_path = get_file_path(hash, file.name)
+    file_path = get_file_path(hash, file.name, dir)
 
     if not default_storage.exists(file_path):
         default_storage.save(file_path, file)
@@ -90,12 +93,13 @@ def check_upload(request: HttpRequest):
     data = get_request_data(request)
     hash = data.get('hash')
     name = data.get('name')
+    dir = data.get('dir')
     if not bool(hash):
         return HttpResponseBadRequest('缺少输入参数hash')
     if not bool(name):
         return HttpResponseBadRequest('缺少输入参数name')
 
-    file_path = get_file_path(hash, name)
+    file_path = get_file_path(hash, name, dir)
     file_url = ''
     upload_url = ''
     if default_storage.exists(file_path):

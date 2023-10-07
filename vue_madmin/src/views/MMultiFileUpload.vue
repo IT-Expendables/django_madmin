@@ -11,7 +11,7 @@ const props = defineProps({
   context: { type: Object, default: () => ({}) }
 })
 
-const { name, value: defaultValue = '', max_num = 5, file_limit = 500, check_upload_url: checkURL } = props.context
+const { name, value: defaultValue = '', max_num = 5, file_limit = 500, check_upload_url: checkURL, upload_dir: dir } = props.context
 
 const defaultFiles = !defaultValue || defaultValue == '' ? [] : defaultValue.split(',').map(e => ({ url: e, name: decodeURIComponent(e.split('/').reverse()[0]) }))
 
@@ -40,7 +40,7 @@ const beforeUpload = async file => {
   const name = file.name
   const hash = await calcFileHash(file)
   try {
-    const res = await axios.post(URL(checkURL), { name, hash })
+    const res = await axios.post(URL(checkURL), { name, hash, dir })
     DEBUG && console.log('check upload success: ', res.data)
     const { file_url, upload_url } = res.data
     if (file_url && file_url != '') {
@@ -49,7 +49,7 @@ const beforeUpload = async file => {
       return false
     }
     if (upload_url && upload_url != '') {
-      uploadDataRef.value = { hash, name: file.name }
+      uploadDataRef.value = { hash, name: file.name, dir }
       uploadUrlRef.value = URL(upload_url)
       return true
     }

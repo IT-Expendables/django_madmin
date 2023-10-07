@@ -21,9 +21,17 @@ VUE_DEV_URL = 'http://127.0.0.1:5199/src/main.js'
 class VueComponent(forms.Widget):
     template_name = "madmin/vue_component.html"
 
+    extra_widget_context = None
+
+    def __init__(self, attrs=None, extra_widget_context=None):
+        super().__init__(attrs)
+        self.extra_widget_context = extra_widget_context or {}
+
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)
         widget = context.get('widget')
+        if self.extra_widget_context:
+            widget.update(self.extra_widget_context)
         attrs = widget.setdefault('attrs', {})
         attrs['class'] = attrs.get('class', '') + ' flex flex-col'
         id = attrs.setdefault('id', 'id_{}'.format(get_random_string(8)))
@@ -43,6 +51,8 @@ class VueComponent(forms.Widget):
 
 class AsyncFileUpload(VueComponent):
 
+    extra_widget_context = {'upload_dir': 'files'}
+
     def get_context(self, name, value, attrs):
         prefix = getattr(settings, 'MADMIN', {}).get('upload_path_prefix', 'madmin')
         context = super().get_context(name, value, attrs)
@@ -55,6 +65,8 @@ class AsyncFileUpload(VueComponent):
 
 class AsyncImageUpload(AsyncFileUpload):
 
+    extra_widget_context = {'upload_dir': 'images'}
+
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)
         context.get('widget').update({'upload_type': 'image'})
@@ -63,6 +75,8 @@ class AsyncImageUpload(AsyncFileUpload):
 
 class AsyncVideoUpload(AsyncFileUpload):
 
+    extra_widget_context = {'upload_dir': 'video'}
+
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)
         context.get('widget').update({'upload_type': 'video'})
@@ -70,6 +84,8 @@ class AsyncVideoUpload(AsyncFileUpload):
 
 
 class AsyncMultiFileUpload(VueComponent):
+
+    extra_widget_context = {'upload_dir': 'files'}
 
     def get_context(self, name, value, attrs):
         prefix = getattr(settings, 'MADMIN', {}).get('upload_path_prefix', 'madmin')

@@ -6,7 +6,7 @@ import { calcFileHash } from '@/utils'
 
 const DEBUG = import.meta.env.DEV
 
-export function useUpload({ defaultValue, checkURL }) {
+export function useUpload({ defaultValue, checkURL, dir = undefined }) {
 
   const host = DEBUG ? 'http://127.0.0.1:8000' : ''
 
@@ -24,7 +24,7 @@ export function useUpload({ defaultValue, checkURL }) {
   const checkUpload = async (file, hash) => {
     try {
       const name = file.name
-      const response = await axios.post(checkURL, { hash, name })
+      const response = await axios.post(checkURL, { hash, name, dir })
       const res = response.data
       DEBUG && console.log('check upload success: ', res)
       return res
@@ -62,7 +62,7 @@ export function useUpload({ defaultValue, checkURL }) {
       message.error('上传文件错误')
       return
     }
-    const { file_url, upload_url } = await checkUpload(file, hash)
+    const { file_url, upload_url } = await checkUpload(file, hash, dir)
     if (file_url && file_url != '') {
       fileInfoRef.value = { url: file_url, name: file.name, file, status: 'success' }
       return

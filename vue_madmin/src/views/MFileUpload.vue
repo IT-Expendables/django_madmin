@@ -10,9 +10,9 @@ const props = defineProps({
   context: { type: Object, default: () => ({}) }
 })
 
-const { name, upload_type: uploadType = 'file', value: defaultValue, check_upload_url: checkURL } = props.context
+const { name, upload_type: uploadType = 'file', value: defaultValue, check_upload_url: checkURL, upload_dir: dir } = props.context
 
-const { host, fileInfoRef, open, clear, progressRef, localURLRef } = useUpload({ defaultValue, checkURL })
+const { host, fileInfoRef, open, clear, progressRef, localURLRef } = useUpload({ defaultValue, checkURL, dir })
 
 const preview = ref(false)
 
