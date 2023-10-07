@@ -42,7 +42,7 @@ export function useUpload({ defaultValue, checkURL, dir = undefined }) {
     try {
       const response = await axios.post(
         upload_url,
-        { hash, file },
+        { hash, file, dir },
         { headers: { 'Content-Type': 'multipart/form-data;' }, onUploadProgress }
       )
       const res = response.data || {}
@@ -62,7 +62,7 @@ export function useUpload({ defaultValue, checkURL, dir = undefined }) {
       message.error('上传文件错误')
       return
     }
-    const { file_url, upload_url } = await checkUpload(file, hash, dir)
+    const { file_url, upload_url } = await checkUpload(file, hash)
     if (file_url && file_url != '') {
       fileInfoRef.value = { url: file_url, name: file.name, file, status: 'success' }
       return
