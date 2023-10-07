@@ -25,6 +25,7 @@ class VueComponent(forms.Widget):
         context = super().get_context(name, value, attrs)
         widget = context.get('widget')
         attrs = widget.setdefault('attrs', {})
+        attrs['class'] = attrs.get('class', '') + ' flex flex-col'
         id = attrs.setdefault('id', 'id_{}'.format(get_random_string(8)))
         widget['id'] = id
         return context
