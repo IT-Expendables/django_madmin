@@ -25,7 +25,10 @@ class VueComponent(forms.Widget):
 
     def __init__(self, attrs=None, extra_widget_context=None):
         super().__init__(attrs)
-        self.extra_widget_context = extra_widget_context or {}
+        if extra_widget_context is not None:
+            self.extra_widget_context = extra_widget_context
+        elif self.extra_widget_context is not None:
+            self.extra_widget_context = self.extra_widget_context.copy()
 
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)
