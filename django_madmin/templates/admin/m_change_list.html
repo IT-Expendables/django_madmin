@@ -104,6 +104,8 @@
     $("#changelist .actions").prepend($(".object-tools li a"))
     $(".object-tools").remove()
 
+    $("#result_list tr").attr("class", "hover:bg-yellow-50")
+
   })(django.jQuery)
 </script>
 {% endblock %}
