@@ -1,6 +1,7 @@
 from django.contrib import admin
+from django import forms
 from django.utils.html import format_html_join
-from .models import Article
+from .models import Article, Episode
 from django_madmin.widgets import AsyncVideoUpload, AsyncImageUpload, AsyncFileUpload, AsyncMultiFileUpload
 
 
@@ -16,6 +17,21 @@ def offline(self, request, queryset):
     self.message_user(request, '已下线{}篇文章'.format(count))
 
 
+class EpisodeForm(forms.ModelForm):
+
+    video = forms.CharField(label="视频", max_length=1000, widget=AsyncVideoUpload())
+
+    class Meta:
+        model = Episode
+        exclude = ['id']
+
+
+class EpisodeInline(admin.TabularInline):
+    model = Episode
+    extra = 2
+    form = EpisodeForm
+
+
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'status', 'post_time', 'creator', '_operate')
@@ -27,6 +43,7 @@ class ArticleAdmin(admin.ModelAdmin):
     online.short_description = "发布"
     offline.short_description = "下线"
     actions = (online, offline)
+    inlines = [EpisodeInline]
 
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)

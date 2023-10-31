@@ -32,3 +32,18 @@ class Article(models.Model):
 
     class Meta:
         verbose_name = verbose_name_plural = '文章'
+
+
+class Episode(models.Model):
+    """单集"""
+
+    article = models.ForeignKey(Article, models.Case, verbose_name='剧集')
+
+    video = models.CharField("视频", max_length=1000)
+
+    def __str__(self):
+        return f'{self.id}'
+
+    class Meta:
+        verbose_name = '单集'
+        verbose_name_plural = '单集列表'

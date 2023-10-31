@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.urls import path
+from django.urls import re_path
 from . import views
 
 
@@ -12,6 +12,6 @@ prefix = getattr(settings, 'MADMIN', {}).get('upload_path_prefix', 'madmin')
 
 
 madmin_urls = [
-    path('{}/upload/'.format(prefix), views.upload, name="upload"),
-    path('{}/check_upload/'.format(prefix), views.check_upload, name="check_upload"),
+    re_path('^{}/upload/'.format(prefix), views.upload, name="upload"),
+    re_path('^{}/check_upload/'.format(prefix), views.check_upload, name="check_upload"),
 ]

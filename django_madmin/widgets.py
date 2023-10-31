@@ -36,8 +36,9 @@ class VueComponent(forms.Widget):
         if self.extra_widget_context:
             widget.update(self.extra_widget_context)
         attrs = widget.setdefault('attrs', {})
-        attrs['class'] = attrs.get('class', '') + ' flex flex-col'
+        attrs['class'] = attrs.get('class', '') + ' flex flex-col v-component'
         id = attrs.setdefault('id', 'id_{}'.format(get_random_string(8)))
+        attrs['vid'] = id
         widget['id'] = id
         return context
 
