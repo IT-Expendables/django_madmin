@@ -36,3 +36,6 @@ export function URL(str) {
   const host = DEBUG ? 'http://127.0.0.1:8000' : ''
   return host + str
 }
+
+
+window.calcFileHash = calcFileHash
