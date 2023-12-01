@@ -13,9 +13,11 @@
             $(".v-component").each(function() {
                 var id = $(this).attr("id")
                 var vid = $(this).attr("vid")
+                var value = $(this).data("value")
                 if (id != vid) {
                     var name = id.substring(3)
                     var acontext = {...context, id, name, attrs: {...context.attrs, id, vid: id} }
+                    if (value) acontext.value = value
                     try {
                         window.vueMount(acontext)
                         $(this).attr("vid", id)
